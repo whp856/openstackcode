@@ -1,0 +1,351 @@
+/* 全局样式重置和基础设置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    overflow-x: hidden;
+}
+
+body {
+    background-image: url('../images/back3.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+}
+
+/* 添加半透明遮罩层以提高内容可读性 */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(245, 247, 250, 0.9);
+    z-index: -1;
+}
+
+/* 主容器样式 */
+#main {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: transform 0.3s ease;
+}
+
+#main:hover {
+    transform: translateY(-2px);
+}
+
+/* 标题样式 */
+#main h1 {
+    color: #2c3e50;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#main h1 img {
+    width: 80px;
+    height: 70px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 分隔线样式 */
+hr {
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(to right, rgba(52, 152, 219, 0), rgba(52, 152, 219, 0.75), rgba(52, 152, 219, 0));
+    border: none;
+    margin: 20px 0;
+}
+
+/* 容器信息样式 */
+#main h1:nth-of-type(2) {
+    color: #3498db;
+    font-size: 1.5rem;
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+/* 返回按钮样式 */
+.butt {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    font-size: 16px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    text-decoration: none;
+}
+
+.butt:hover {
+    background: linear-gradient(135deg, #2980b9, #1f6dad);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
+}
+
+/* 表格样式 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 30px 0;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+table th,
+table td {
+    padding: 16px;
+    text-align: center;
+    border-bottom: 1px solid #e1e8ed;
+}
+
+table th {
+    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    color: white;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+table tr {
+    transition: all 0.3s ease;
+}
+
+table tr:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.01);
+}
+
+table tr:last-child td {
+    border-bottom: none;
+}
+
+/* 操作按钮样式 */
+.butt1 {
+    background: #3498db;
+    color: white;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    margin: 0 4px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.butt1:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+/* 按钮颜色区分 */
+.butt1:nth-of-type(1) { /* 查看按钮 */
+    background: #27ae60;
+}
+
+.butt1:nth-of-type(1):hover {
+    background: #229954;
+}
+
+.butt1:nth-of-type(2) { /* 删除按钮 */
+    background: #e74c3c;
+}
+
+.butt1:nth-of-type(2):hover {
+    background: #c0392b;
+}
+
+.butt1:nth-of-type(3) { /* 下载按钮 */
+    background: #f39c12;
+}
+
+.butt1:nth-of-type(3):hover {
+    background: #e67e22;
+}
+
+/* 分页样式 */
+#main > div {
+    text-align: center;
+    margin: 30px 0;
+}
+
+#main > div a {
+    color: #3498db;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 0 4px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+#main > div a:hover {
+    background-color: #3498db;
+    color: white;
+}
+
+/* 上传表单样式 */
+form {
+    text-align: center;
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 2px dashed #ddd;
+    transition: all 0.3s ease;
+}
+
+form:hover {
+    border-color: #3498db;
+    background-color: #eef6fd;
+}
+
+form input[type="file"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 0 auto 15px auto;
+    width: 200px;
+}
+
+form input[type="file"]:hover {
+    border-color: #3498db;
+}
+
+form input[type="submit"] {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
+
+form input[type="submit"]:hover {
+    background: linear-gradient(135deg, #8e44ad, #7d3c98);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(155, 89, 182, 0.3);
+}
+
+/* 空状态提示样式 */
+#main p {
+    text-align: center;
+    color: #7f8c8d;
+    font-size: 18px;
+    margin: 40px 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    #main {
+        margin: 20px;
+        padding: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    #main {
+        padding: 20px 15px;
+    }
+    
+    #main h1 {
+        font-size: 1.6rem;
+    }
+    
+    #main h1 img {
+        width: 60px;
+        height: 50px;
+    }
+    
+    .butt {
+        position: relative;
+        top: auto;
+        right: auto;
+        margin: 20px 0;
+        width: 100%;
+    }
+    
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    table th,
+    table td {
+        padding: 12px;
+    }
+    
+    .butt1 {
+        display: block;
+        margin: 5px auto;
+        width: 80%;
+    }
+}
+
+@media (max-width: 480px) {
+    #main {
+        margin: 10px;
+        padding: 15px 10px;
+    }
+    
+    #main h1 {
+        font-size: 1.4rem;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    form {
+        padding: 15px;
+    }
+    
+    form input[type="file"],
+    form input[type="submit"] {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+    }
+}

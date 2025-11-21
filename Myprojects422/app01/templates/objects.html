@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>objects</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/objects.css' %}" />
+</head>
+
+<body>
+
+    <div id="main">
+        <h1><img src="{% static 'images/doc.jpg' %}" width="110" height="100" /></h1>
+        <hr
+            style="width: 80%; margin: 0 auto; border: 1px; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
+        <h1>当前容器{{data2}}</h1>
+
+        <div style="margin-bottom: 20px;">
+            <a href="/containers"><button class="butt">返回上级页面</button></a>
+        </div>
+
+        {% if resp1 %}
+        <table border="1" align="center" style=" width:820px;height:150px;">
+            <tr style="width:200px">
+                <th style="height: 50px;width:200px">名称</th>
+                <th style="height: 50px;width:200px">日期</th>
+                <th style="height: 50px;width:200px">type</th>
+                <th style="height: 50px;width:200px">文件大小</th>
+                <th align="center" style="height: 20px;width:200px;">操作</th>
+
+            </tr>
+            {% for key in resp1 %}
+            <tr>
+                <td style="height: 30px;">{{key.name}}</td>
+                <td style="height: 30px;">{{key.last_modified}}</td>
+                <td style="height: 30px;">{{key.content_type}}</td>
+                <td style="height: 30px;">{{key.bytes}}</td>
+                <td align="center" style="height: 10px;"><input class="butt1" type="button" value="查看"
+                        onclick='window.location.href="/view_file/{{data2}}/{{key.name}}/{{key.content_type}}"'>
+                    <input class="butt1" type="button" value="删除"
+                        onclick='window.location.href="/delete/{{data2}}/{{key.name}}"' />
+                    <input class="butt1" type="button" value="下载"
+                        onclick='window.location.href="/download/{{data2}}/{{key.name}}"' />
+                </td>
+                {% endfor %}
+            </tr>
+        </table>
+        <div style="text-align:center">
+            {% if resp1.has_previous %}
+            <a href="?page=1">|&lt;第一页</a>
+            <a href="?page={{ resp1.previous_page_number }}">前一页</a>
+            {% endif %}
+            page {{resp1.number}} of {{resp1.paginator.num_pages}}
+            {% if resp1.has_next %}
+            <a href="?page={{resp1.next_page_number}}">下一页</a>
+            <a href="?page={{resp1.paginator.num_pages}}">最末页&gt;|</a>
+            {% endif %}
+        </div>
+        {%else%}
+        <div style="text-align:center">
+            没有对象
+        </div>
+        {%endif%}
+
+        <div style="margin-top: 30px; text-align:center; padding: 20px 0;">
+    <form method="post" action="/upload/{{data2}}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px !important;">
+            <input type="file" name="filename" accept="image/*,.txt,.doc,.docx,.pdf"
+                   style="width: 200px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; display: block !important; margin: 0 !important;"/>
+            <button type="submit" class="butt"
+                    style="padding: 10px 25px; font-size: 16px; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 4px; display: block !important; margin: 0 !important;">
+                    上传文件
+            </button>
+        </div>
+    </form>
+</div>
+
+    </div>
+</body>
+
+</html>

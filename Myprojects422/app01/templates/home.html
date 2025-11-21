@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="../static/css/Login.css"/>
+</head>
+<body>
+<img src="../static/images/back3.jpg" style="background-size:contain; width:2080px;">
+    <div id="login" >
+        <h1>Swift网盘</h1>
+        <h1><img src="../static/images/admin.jpg" width="130" height="100"/></h1>
+        <form method="post" action="{% url 'login_check' %}">
+            {% csrf_token %}
+            <h2>用户名</h2>
+            <input type="text"  placeholder="请输入用户名" name="u" ></input>
+            <h2>密码</h2>
+            <input type="password"  placeholder="密码" name="p"></input>
+            <div style="display:none;">
+            <input id="text" type="text" name="next_url" value="{{next_url}}"/>
+            </div>
+            {% if login_error_msg %}
+                <div id="error-msg">
+                    <span style="color:rgba(255,0,0,1.2);font-family:cursive;margin-left:120px;">{{login_error_msg}}</span>
+                </div>
+            {% endif %}
+            <button class="but" type="submit">登录</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>main</title>
+    <script type="text/javascript">
+    function openWindows(){
+        var name=prompt("请输入名称：");
+        window.location.href="/addContainer/"+name+"";
+}
+
+    function confirmDeleteContainer(containerName) {
+        // 先检查容器中是否有对象
+        fetch(`/check_container_objects/${containerName}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.has_objects) {
+                    alert(`容器 "${containerName}" 中包含对象，不能删除！\n请先删除容器中的所有对象。`);
+                    return;
+                }
+
+                // 没有对象，确认删除
+                if (confirm(`确定要删除容器 "${containerName}" 吗？\n此操作无法撤销！`)) {
+                    window.location.href = "/delete_container/" + containerName;
+                }
+            })
+            .catch(error => {
+                console.error('检查容器失败:', error);
+                // 如果检查失败，仍然询问用户
+                if (confirm(`确定要删除容器 "${containerName}" 吗？\n此操作无法撤销！`)) {
+                    window.location.href = "/delete_container/" + containerName;
+                }
+            });
+    }
+
+    </script>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/containers.css' %}"/>
+</head>
+
+<body>
+       <div id="main" align="center">
+         <h1><img src="{% static 'images/swift.jpg' %}" width="80" height="150" align="center" /></h1>
+         <hr style="width: 80%; margin: 0 auto; border: 1px; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
+         <h1>当前可用容器</h1>
+         <div style="margin: 20px 0;">
+             <input class="butt" type="button" value="添加容器" onclick="openWindows();"/>
+         </div>
+         {% if resp1 %}
+        <table border="1" align="center" style=" width:820px;height:150px;">
+            <tr style="width:220px">
+                <th style="height: 50px;width:240px">名称</th>
+                <th style="height: 50px;width:240px">对象数</th>
+                <th style="height: 50px;width:240px">容器大小</th>
+                <th style="height: 50px;width:140px">操作</th>
+            </tr>
+            {% for key in resp1 %}
+            <tr>
+                <td style="height: 50px;">{{key.name}}</td>
+                <td style="height: 50px;">{{key.count}}</td>
+                <td style="height: 50px;">{{key.bytes}}</td>
+                <td  align="center" style="height: 50px;">
+                    <input  class="butt1" type="button" value="进入" onclick='window.location.href="/objects/{{key.name}}"'>
+                    <input class="butt1" type="button" value="删除" onclick='confirmDeleteContainer("{{key.name}}")'>
+                    <!-- confirmDeleteObject('{{data2}}', '{{key.name}}') -->
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        
+        <!-- 分页导航 -->
+        <div style="text-align:center">
+            {% if resp1.has_previous %}
+                <a href="?page=1">|&lt;第一页</a>
+                <a href="?page={{ resp1.previous_page_number }}">前一页</a>
+            {% endif %}
+            page {{ resp1.number }} of {{ resp1.paginator.num_pages }}
+            {% if resp1.has_next %}
+                <a href="?page={{ resp1.next_page_number }}">下一页</a>
+                <a href="?page={{ resp1.paginator.num_pages }}">最末页&gt;|</a>
+            {% endif %}
+        </div>
+        {% else %}
+        <div style="text-align:center">
+            没有容器
+        </div>
+        {% endif %}
+        
+        <br/><br/><br/>
+        <a href="/logout/"><button class="butt">退出登录</button></a>
+     </div>
+</body>
+</html>
