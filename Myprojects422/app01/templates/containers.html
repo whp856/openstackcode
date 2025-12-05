@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>main</title>
-    <script type="text/javascript">
+    <script>
     function openWindows(){
-        var name=prompt("请输入名称：");
+        var name=prompt("请输入容器名称：");
+        if(name!=null&&name.trim()!="")
         window.location.href="/addContainer/"+name+"";
-}
+    }
 
     function confirmDeleteContainer(containerName) {
         // 先检查容器中是否有对象
@@ -15,21 +16,53 @@
             .then(response => response.json())
             .then(data => {
                 if (data.has_objects) {
-                    alert(`容器 "${containerName}" 中包含对象，不能删除！\n请先删除容器中的所有对象。`);
+                    const modal = document.createElement('div');
+                    modal.className = 'modal';
+                    modal.innerHTML = `
+                        <div class="modal-content">
+                            <h3>⚠️ 无法删除</h3>
+                            <p>容器 "${containerName}" 中包含对象，无法删除！</p>
+                            <p>请先删除容器中的所有对象后再重试。</p>
+                            <button class="butt primary" onclick="this.closest('.modal').remove()">确定</button>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
                     return;
                 }
 
                 // 没有对象，确认删除
-                if (confirm(`确定要删除容器 "${containerName}" 吗？\n此操作无法撤销！`)) {
-                    window.location.href = "/delete_container/" + containerName;
-                }
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <h3>🗑️ 确认删除</h3>
+                        <p>您确定要删除容器 "${containerName}" 吗？</p>
+                        <p class="warning">此操作无法撤销！</p>
+                        <div class="modal-actions">
+                            <button class="butt secondary" onclick="this.closest('.modal').remove()">取消</button>
+                            <button class="butt danger" onclick="window.location.href='/delete_container/${containerName}'">确认删除</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
             })
             .catch(error => {
                 console.error('检查容器失败:', error);
                 // 如果检查失败，仍然询问用户
-                if (confirm(`确定要删除容器 "${containerName}" 吗？\n此操作无法撤销！`)) {
-                    window.location.href = "/delete_container/" + containerName;
-                }
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <h3>🗑️ 确认删除</h3>
+                        <p>您确定要删除容器 "${containerName}" 吗？</p>
+                        <p class="warning">此操作无法撤销！</p>
+                        <div class="modal-actions">
+                            <button class="butt secondary" onclick="this.closest('.modal').remove()">取消</button>
+                            <button class="butt danger" onclick="window.location.href='/delete_container/${containerName}'">确认删除</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
             });
     }
 
@@ -45,6 +78,7 @@
          <h1>当前可用容器</h1>
          <div style="margin: 20px 0;">
              <input class="butt" type="button" value="添加容器" onclick="openWindows();"/>
+             <a href="/logs/"><input class="butt" type="button" value="查看日志"/></a>
          </div>
          {% if resp1 %}
         <table border="1" align="center" style=" width:820px;height:150px;">
@@ -74,7 +108,7 @@
                 <a href="?page=1">|&lt;第一页</a>
                 <a href="?page={{ resp1.previous_page_number }}">前一页</a>
             {% endif %}
-            page {{ resp1.number }} of {{ resp1.paginator.num_pages }}
+            Page {{ resp1.number }} of {{ resp1.paginator.num_pages }}
             {% if resp1.has_next %}
                 <a href="?page={{ resp1.next_page_number }}">下一页</a>
                 <a href="?page={{ resp1.paginator.num_pages }}">最末页&gt;|</a>

@@ -11,73 +11,191 @@
 <body>
 
     <div id="main">
-        <h1><img src="{% static 'images/doc.jpg' %}" width="110" height="100" /></h1>
-        <hr
-            style="width: 80%; margin: 0 auto; border: 1px; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
-        <h1>当前容器{{data2}}</h1>
+        <h1><img src="{% static 'images/doc.jpg' %}" class="header-image" /></h1>
+        <hr class="divider">
+        <h1 class="container-name">当前容器{{data2}}</h1>
 
-        <div style="margin-bottom: 20px;">
-            <a href="/containers"><button class="butt">返回上级页面</button></a>
+        <!-- 修改返回按钮 -->
+        <div class="return-container">
+            <a href="/containers"><button class="butt return-btn">返回上级页面</button></a>
         </div>
 
-        {% if resp1 %}
-        <table border="1" align="center" style=" width:820px;height:150px;">
-            <tr style="width:200px">
-                <th style="height: 50px;width:200px">名称</th>
-                <th style="height: 50px;width:200px">日期</th>
-                <th style="height: 50px;width:200px">type</th>
-                <th style="height: 50px;width:200px">文件大小</th>
-                <th align="center" style="height: 20px;width:200px;">操作</th>
+        <!-- 搜索和排序功能 -->
+        <div class="search-sort-container">
+            <div class="search-container">
+                <form method="get" class="search-form">
+                    <input type="text" name="search" placeholder="搜索文件名..." value="{{search_query|default:''}}"
+                        class="search-input">
+                    <button type="submit" class="butt">搜索</button>
+                    {% if search_query %}
+                    <a href="?search=" class="butt">清除</a>
+                    {% endif %}
+                </form>
+            </div>
 
-            </tr>
-            {% for key in resp1 %}
-            <tr>
-                <td style="height: 30px;">{{key.name}}</td>
-                <td style="height: 30px;">{{key.last_modified}}</td>
-                <td style="height: 30px;">{{key.content_type}}</td>
-                <td style="height: 30px;">{{key.bytes}}</td>
-                <td align="center" style="height: 10px;"><input class="butt1" type="button" value="查看"
-                        onclick='window.location.href="/view_file/{{data2}}/{{key.name}}/{{key.content_type}}"'>
-                    <input class="butt1" type="button" value="删除"
-                        onclick='window.location.href="/delete/{{data2}}/{{key.name}}"' />
-                    <input class="butt1" type="button" value="下载"
-                        onclick='window.location.href="/download/{{data2}}/{{key.name}}"' />
-                </td>
+
+            <div class="sort-container">
+                <label class="sort-label">排序：</label>
+                <select name="sort" onchange="window.location.href='?search={{search_query}}&sort='+this.value"
+                    class="sort-select">
+                    <option value="name" {% if sort_by == 'name' %}selected{% endif %}>名称</option>
+                    <option value="date" {% if sort_by == 'date' %}selected{% endif %}>日期</option>
+                    <option value="size" {% if sort_by == 'size' %}selected{% endif %}>大小</option>
+                </select>
+            </div>
+        </div>
+
+        <table class="file-table">
+            <thead>
+                <tr>
+                    <th>名称</th>
+                    <th>日期</th>
+                    <th>类型</th>
+                    <th>文件大小</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key in resp1 %}
+                <tr>
+                    <td>{{key.name}}</td>
+                    <td>{{key.last_modified}}</td>
+                    <td data-type="{{key.content_type}}">{{key.content_type}}</td>
+                    <td>{{key.bytes}} 字节</td>
+                    <td>
+                        <input class="butt1 action-btn view-btn" type="button" value="查看"
+                            data-url="/view_file/{{data2}}/{{key.name}}/{{key.content_type}}">
+                        <input class="butt1 action-btn delete-btn" type="button" value="删除"
+                            data-url="/delete/{{data2}}/{{key.name}}" />
+                        <input class="butt1 action-btn download-btn" type="button" value="下载"
+                            data-url="/download/{{data2}}/{{key.name}}" />
+                    </td>
+                </tr>
                 {% endfor %}
-            </tr>
+            </tbody>
         </table>
-        <div style="text-align:center">
-            {% if resp1.has_previous %}
-            <a href="?page=1">|&lt;第一页</a>
-            <a href="?page={{ resp1.previous_page_number }}">前一页</a>
-            {% endif %}
-            page {{resp1.number}} of {{resp1.paginator.num_pages}}
-            {% if resp1.has_next %}
-            <a href="?page={{resp1.next_page_number}}">下一页</a>
-            <a href="?page={{resp1.paginator.num_pages}}">最末页&gt;|</a>
-            {% endif %}
-        </div>
-        {%else%}
-        <div style="text-align:center">
-            没有对象
-        </div>
-        {%endif%}
 
-        <div style="margin-top: 30px; text-align:center; padding: 20px 0;">
-    <form method="post" action="/upload/{{data2}}" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px !important;">
-            <input type="file" name="filename" accept="image/*,.txt,.doc,.docx,.pdf"
-                   style="width: 200px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; display: block !important; margin: 0 !important;"/>
-            <button type="submit" class="butt"
-                    style="padding: 10px 25px; font-size: 16px; cursor: pointer; background-color: #4CAF50; color: white; border: none; border-radius: 4px; display: block !important; margin: 0 !important;">
-                    上传文件
-            </button>
+        {% if not resp1 %}
+        <!-- 空状态提示 -->
+        <div class="empty-state">
+            <h3>📁 当前容器为空</h3>
+            <p>请使用下方上传功能添加文件</p>
         </div>
-    </form>
-</div>
+        {% else %}
+        <!-- 分页导航 -->
+        <div class="pagination">
+            {% if resp1.has_previous %}
+            <a href="?search={{search_query}}&sort={{sort_by}}&page=1">|&lt;第一页</a>
+            <a href="?search={{search_query}}&sort={{sort_by}}&page={{ resp1.previous_page_number }}">前一页</a>
+            {% endif %}
+            第 {{resp1.number}} 页，共 {{resp1.paginator.num_pages}} 页
+            {% if resp1.has_next %}
+            <a href="?search={{search_query}}&sort={{sort_by}}&page={{resp1.next_page_number}}">下一页</a>
+            <a href="?search={{search_query}}&sort={{sort_by}}&page={{resp1.paginator.num_pages}}">最末页&gt;|</a>
+            {% endif %}
+        </div>
+        {% endif %}
+        </form>
+
+        <!-- 上传表单 -->
+        <div class="upload-form">
+            <form method="post" action="/upload/{{data2}}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="upload-container">
+                    <input type="file" name="filename" accept="image/*,.txt,.doc,.docx,.pdf" class="file-input">
+                    <button type="submit" class="upload-btn">上传文件</button>
+                </div>
+            </form>
+        </div>
 
     </div>
+
+    <script>
+        // 操作按钮事件处理 - 使用data-url属性
+        document.querySelectorAll('.action-btn').forEach(button => {
+            button.addEventListener('click', function (e) {
+                const url = this.getAttribute('data-url');
+                if (!url) return;
+
+                const fileName = this.closest('tr').querySelector('td:nth-child(1)').textContent;
+
+                if (this.classList.contains('delete-btn')) {
+                    // 删除按钮需要确认
+                    if (confirm(`确定要删除文件 "${fileName}" 吗？此操作无法撤销！`)) {
+                        window.location.href = url;
+                    }
+                } else if (this.classList.contains('view-btn')) {
+                    // 查看按钮直接跳转
+                    window.location.href = url;
+                } else if (this.classList.contains('download-btn')) {
+                    // 下载按钮直接跳转
+                    window.location.href = url;
+                }
+            });
+        });
+
+        // 文件上传成功后的提示
+        window.addEventListener('load', function () {
+            // 如果URL中有上传成功的参数，显示成功消息
+            if (window.location.search.includes('upload=success')) {
+                const message = document.createElement('div');
+                message.style.cssText = 'background-color: #4CAF50; color: white; text-align: center; padding: 10px; position: fixed; top: 0; left: 0; right: 0; z-index: 1000;';
+                message.textContent = '文件上传成功！';
+                document.body.appendChild(message);
+
+                // 3秒后自动移除消息
+                setTimeout(() => {
+                    message.remove();
+                    // 清除URL参数
+                    const url = new URL(window.location);
+                    url.searchParams.delete('upload');
+                    window.history.replaceState({}, '', url);
+                }, 3000);
+            }
+        });
+
+        // 搜索框实时搜索功能（可选）
+        const searchInput = document.querySelector('.search-input');
+        if (searchInput) {
+            let searchTimeout;
+            searchInput.addEventListener('input', function () {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    // 这里可以添加实时搜索功能
+                    // 当前保持原有提交方式
+                }, 500);
+            });
+        }
+
+
+        // 文件大小格式化
+        document.querySelectorAll('.file-table tbody tr td:nth-child(5)').forEach(cell => {
+            const size = parseInt(cell.textContent);
+            if (!isNaN(size)) {
+                cell.textContent = formatFileSize(size);
+            }
+        });
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // 键盘快捷键支持
+        document.addEventListener('keydown', function (e) {
+            // Ctrl+F 聚焦搜索框
+            if (e.ctrlKey && e.key === 'f') {
+                e.preventDefault();
+                const searchInput = document.querySelector('.search-input');
+                if (searchInput) {
+                    searchInput.focus();
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>

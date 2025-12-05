@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户注册</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/Login.css' %}"/>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            overflow-x: hidden;
+        }
+        
+        /* 背景图片优化 */
+        body img:first-child {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            filter: brightness(0.7); /* 稍微调暗背景以增强前景内容的可读性 */
+        }
+        
+        /* 修改为更窄的长方形样式 */
+        #register {
+            width: 350px;  /* 调整为更窄的宽度 */
+            max-width: 85vw;
+            padding: 30px 35px; /* 调整内边距比例 */
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            z-index: 1;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        #register:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 标题样式调整 */
+        #register h1 {
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 1.8rem;  /* 调整标题大小 */
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+        
+        /* 头像调整 */
+        #register img {
+            border-radius: 50%;
+            margin: 0 auto 20px; /* 减少底部间距 */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            width: 80px !important;  /* 缩小头像尺寸 */
+            height: 80px !important;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            transition: transform 0.3s ease;
+        }
+        
+        #register img:hover {
+            transform: scale(1.05);
+        }
+        
+        /* 标签样式调整 */
+        #register h2 {
+            color: #4a5568;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            margin-top: 15px; /* 调整间距 */
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* 表单输入框样式调整 */
+        #register input {
+            width: 100%;
+            height: 45px;  /* 稍微减小高度 */
+            padding: 0 12px;
+            margin-bottom: 3px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-sizing: border-box;
+        }
+        
+        #register input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background-color: white;
+        }
+        
+        #register input::placeholder {
+            color: #a0aec0;
+        }
+        
+        /* 按钮样式调整 */
+        .register-button {
+            width: 100%;
+            height: 45px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            letter-spacing: 0.5px;
+        }
+        
+        .register-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .register-button:active {
+            transform: translateY(-1px);
+        }
+        
+        /* 登录链接样式调整 */
+        .login-link {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+        
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .login-link a:hover {
+            color: #5a67d8;
+            text-decoration: underline;
+        }
+        
+        /* 错误消息样式调整 */
+        #error-msg, .error-message {
+            margin: 12px 0;
+            padding: 10px;
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+            text-align: center;
+            font-size: 0.85rem;
+            border-radius: 5px;
+            border-left: 3px solid #ef4444;
+        }
+        
+        /* 表单间距优化 */
+        form {
+            width: 100%;
+        }
+    </style>
+    
+</head>
+<body>
+    <img src="{% static 'images/back3.jpg' %}" alt="背景图片">
+    <div id="register">
+        <h1>用户注册</h1>
+        <img src="{% static 'images/admin.jpg' %}" alt="用户头像">
+        
+        <form method="post" action="{% url 'register' %}">
+            {% csrf_token %}
+            
+            {% if error_msg %}
+                <div class="error-message">{{ error_msg }}</div>
+            {% endif %}
+            
+            <h2>用户名</h2>
+            <input type="text" placeholder="请输入用户名" name="username" required>
+            
+            <h2>密码</h2>
+            <input type="password" placeholder="请输入密码" name="password" required>
+            
+            <h2>确认密码</h2>
+            <input type="password" placeholder="请再次输入密码" name="confirm_password" required>
+            
+            <h2>邮箱 (选填)</h2>
+            <input type="email" placeholder="请输入邮箱地址" name="email">
+            
+            <button class="register-button" type="submit">注册</button>
+            
+            <div class="login-link">
+                已有账号？<a href="{% url 'home' %}">立即登录</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

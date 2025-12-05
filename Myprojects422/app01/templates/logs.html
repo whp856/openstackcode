@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统日志</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/containers.css' %}" />
+    <style>
+        .log-entry {
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            font-size: large;
+            padding: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .log-timestamp {
+            color: #666;
+            font-weight: bold;
+        }
+        .log-user {
+            color: #0066cc;
+            margin-left: 10px;
+        }
+        .log-action {
+            color: #333;
+            margin-left: 10px;
+        }
+        .log-container {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .refresh-btn {
+            margin-bottom: 20px;
+        }
+        .log-stats {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4f8;
+            border-radius: 4px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <h1><img src="{% static 'images/doc.jpg' %}" width="110" height="100" /></h1>
+        <hr style="width: 80%; margin: 0 auto; border: 1px; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));">
+        <h1>系统访问日志</h1>
+
+        <div style="margin-bottom: 20px;">
+            <a href="/containers"><button class="butt">返回容器列表</button></a>
+            <button class="butt refresh-btn" onclick="window.location.reload()">刷新日志</button>
+        </div>
+
+        {% if logs %}
+        <div class="log-container">
+            {% for log in logs %}
+            <div class="log-entry">
+                {{ log }}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div style="text-align:center; margin-top: 20px;">
+            {% if logs.has_previous %}
+            <a href="?page=1">|&lt;第一页</a>
+            <a href="?page={{ logs.previous_page_number }}">前一页</a>
+            {% endif %}
+            第 {{logs.number}} 页，共 {{logs.paginator.num_pages}} 页 (总计 {{logs.paginator.count}} 条记录)
+            {% if logs.has_next %}
+            <a href="?page={{ logs.next_page_number }}">下一页</a>
+            <a href="?page={{ logs.paginator.num_pages }}">最末页&gt;|</a>
+            {% endif %}
+        </div>
+
+        <div class="log-stats">
+            <strong>显示最新的1000条日志记录</strong><br>
+            <small>日志记录范围: 上传、下载、删除、查看文件等操作</small>
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 50px;">
+            <h3>暂无日志记录</h3>
+            <p>系统开始记录用户操作日志后，日志将在此处显示</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // 自动刷新功能 (每30秒刷新一次)
+        let autoRefresh = false;
+        let refreshInterval;
+
+        function toggleAutoRefresh() {
+            autoRefresh = !autoRefresh;
+            if (autoRefresh) {
+                refreshInterval = setInterval(function() {
+                    window.location.reload();
+                }, 30000);
+                alert('已开启自动刷新 (每30秒)');
+            } else {
+                clearInterval(refreshInterval);
+                alert('已关闭自动刷新');
+            }
+        }
+
+        // 添加键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'r' || e.key === 'R') {
+                window.location.reload();
+            }
+        });
+    </script>
+</body>
+</html>

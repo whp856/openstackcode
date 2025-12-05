@@ -5,347 +5,326 @@
     box-sizing: border-box;
 }
 
-html, body {
+html {
     width: 100%;
     height: 100%;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f7fa;
-    color: #333;
-    overflow-x: hidden;
+    font-style: sans-serif;
 }
 
 body {
-    background-image: url('../images/back3.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    position: relative;
-}
-
-/* 添加半透明遮罩层以提高内容可读性 */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    background-color: rgba(245, 247, 250, 0.9);
-    z-index: -1;
+    min-height: 100vh;
+    font-family: 'Microsoft YaHei', 'Open Sans', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-attachment: fixed;
+    color: #333;
+    line-height: 1.6;
 }
 
 /* 主容器样式 */
 #main {
     max-width: 1200px;
     margin: 30px auto;
-    padding: 30px;
+    padding: 20px;
     background: rgba(255, 255, 255, 0.95);
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    transition: transform 0.3s ease;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
-#main:hover {
-    transform: translateY(-2px);
-}
-
-/* 标题样式 */
+/* 标题和Logo样式 */
 #main h1 {
+    text-align: center;
     color: #2c3e50;
-    font-size: 2rem;
-    font-weight: 600;
     margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.container-name {
+    font-size: 1.8em;
+    margin-bottom: 30px;
+}
+
+#main img {
+    display: block;
+    margin: 0 auto 15px;
+    max-width: 100%;
+    height: auto;
+}
+
+.header-image {
+    width: 120px;
+    height: 120px;
+}
+
+/* 分割线样式 */
+.divider {
+    margin: 20px auto;
+    width: 80%;
+    border: 0;
+    height: 2px;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+}
+
+/* 返回按钮容器 */
+.return-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.return-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.return-btn:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* 搜索和排序功能样式 */
+.search-sort-container {
     display: flex;
+    justify-content: space-between;
     align-items: center;
+    margin: 20px 0;
+    flex-wrap: wrap;
     gap: 15px;
 }
 
-#main h1 img {
-    width: 80px;
-    height: 70px;
+.search-container {
+    flex: 1;
+    min-width: 300px;
+}
+
+.search-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.search-input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 2px solid #e2e8f0;
     border-radius: 8px;
-    object-fit: cover;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    transition: border-color 0.3s ease;
 }
 
-/* 分隔线样式 */
-hr {
-    width: 100%;
-    height: 3px;
-    background: linear-gradient(to right, rgba(52, 152, 219, 0), rgba(52, 152, 219, 0.75), rgba(52, 152, 219, 0));
-    border: none;
-    margin: 20px 0;
+.search-input:focus {
+    outline: none;
+    border-color: #667eea;
 }
 
-/* 容器信息样式 */
-#main h1:nth-of-type(2) {
-    color: #3498db;
-    font-size: 1.5rem;
-    margin-top: 10px;
-    margin-bottom: 25px;
+.sort-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-/* 返回按钮样式 */
-.butt {
-    background: linear-gradient(135deg, #3498db, #2980b9);
-    color: white;
-    font-size: 16px;
-    padding: 12px 24px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
+.sort-label {
     font-weight: 500;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
-    position: absolute;
-    top: 30px;
-    right: 30px;
-    text-decoration: none;
+    color: #2c3e50;
 }
 
-.butt:hover {
-    background: linear-gradient(135deg, #2980b9, #1f6dad);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
+.sort-select {
+    padding: 10px 15px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.sort-select:focus {
+    outline: none;
+    border-color: #667eea;
 }
 
 /* 表格样式 */
-table {
+.file-table {
     width: 100%;
+    max-width: 1000px;
+    margin: 20px auto;
     border-collapse: collapse;
-    margin: 30px 0;
     background-color: white;
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
 }
 
-table th,
-table td {
-    padding: 16px;
-    text-align: center;
-    border-bottom: 1px solid #e1e8ed;
-}
-
-table th {
-    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+.file-table th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    font-size: 14px;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 2px solid #ddd;
 }
 
-table tr {
-    transition: all 0.3s ease;
+.file-table td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
 }
 
-table tr:hover {
-    background-color: #f8f9fa;
-    transform: scale(1.01);
-}
-
-table tr:last-child td {
+.file-table tr:last-child td {
     border-bottom: none;
 }
 
-/* 操作按钮样式 */
-.butt1 {
-    background: #3498db;
+.file-table tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.file-table tr:hover {
+    background-color: #f1f3f5;
+    transition: background-color 0.3s ease;
+}
+
+/* 按钮样式 */
+.butt, .butt1 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    font-size: 14px;
-    padding: 8px 16px;
-    border-radius: 6px;
     border: none;
-    cursor: pointer;
-    margin: 0 4px;
-    transition: all 0.3s ease;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
     font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
 }
 
-.butt1:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+.butt1 {
+    margin: 3px;
+    padding: 8px 16px;
+    font-size: 12px;
 }
 
-/* 按钮颜色区分 */
-.butt1:nth-of-type(1) { /* 查看按钮 */
-    background: #27ae60;
+.butt:hover, .butt1:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
-.butt1:nth-of-type(1):hover {
-    background: #229954;
+.butt:active, .butt1:active {
+    transform: translateY(0);
 }
 
-.butt1:nth-of-type(2) { /* 删除按钮 */
-    background: #e74c3c;
+/* 操作按钮样式 */
+.view-btn {
+    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
 }
 
-.butt1:nth-of-type(2):hover {
-    background: #c0392b;
+.view-btn:hover {
+    background: linear-gradient(135deg, #2f855a 0%, #276749 100%);
 }
 
-.butt1:nth-of-type(3) { /* 下载按钮 */
-    background: #f39c12;
+.delete-btn {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
 }
 
-.butt1:nth-of-type(3):hover {
-    background: #e67e22;
+.delete-btn:hover {
+    background: linear-gradient(135deg, #c53030 0%, #9b2c2c 100%);
+}
+
+.download-btn {
+    background: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
+}
+
+.download-btn:hover {
+    background: linear-gradient(135deg, #2c5aa0 0%, #1e40af 100%);
+}
+
+/* 空状态提示样式 */
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 16px;
+}
+
+.empty-state h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #2c3e50;
 }
 
 /* 分页样式 */
-#main > div {
+.pagination {
     text-align: center;
-    margin: 30px 0;
+    margin: 20px 0;
+    font-size: 14px;
 }
 
-#main > div a {
-    color: #3498db;
+.pagination a {
+    color: #667eea;
     text-decoration: none;
-    padding: 8px 12px;
+    margin: 0 8px;
+    padding: 6px 12px;
     border-radius: 4px;
-    margin: 0 4px;
     transition: all 0.3s ease;
-    font-weight: 500;
 }
 
-#main > div a:hover {
-    background-color: #3498db;
+.pagination a:hover {
+    background-color: #667eea;
     color: white;
 }
 
 /* 上传表单样式 */
-form {
+.upload-form {
     text-align: center;
     margin-top: 30px;
     padding: 20px;
     background-color: #f8f9fa;
-    border-radius: 8px;
-    border: 2px dashed #ddd;
-    transition: all 0.3s ease;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-form:hover {
-    border-color: #3498db;
-    background-color: #eef6fd;
+.upload-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
-form input[type="file"] {
+.file-input {
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
     background-color: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: block;
-    margin: 0 auto 15px auto;
-    width: 200px;
+    font-size: 14px;
 }
 
-form input[type="file"]:hover {
-    border-color: #3498db;
-}
-
-form input[type="submit"] {
-    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+.upload-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    display: block;
-    margin: 0 auto;
-}
-
-form input[type="submit"]:hover {
-    background: linear-gradient(135deg, #8e44ad, #7d3c98);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(155, 89, 182, 0.3);
-}
-
-/* 空状态提示样式 */
-#main p {
-    text-align: center;
-    color: #7f8c8d;
-    font-size: 18px;
-    margin: 40px 0;
-    padding: 20px;
-    background-color: #f8f9fa;
     border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-/* 响应式设计 */
-@media (max-width: 1200px) {
-    #main {
-        margin: 20px;
-        padding: 25px;
-    }
-}
-
-@media (max-width: 768px) {
-    #main {
-        padding: 20px 15px;
-    }
-    
-    #main h1 {
-        font-size: 1.6rem;
-    }
-    
-    #main h1 img {
-        width: 60px;
-        height: 50px;
-    }
-    
-    .butt {
-        position: relative;
-        top: auto;
-        right: auto;
-        margin: 20px 0;
-        width: 100%;
-    }
-    
-    table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-    
-    table th,
-    table td {
-        padding: 12px;
-    }
-    
-    .butt1 {
-        display: block;
-        margin: 5px auto;
-        width: 80%;
-    }
-}
-
-@media (max-width: 480px) {
-    #main {
-        margin: 10px;
-        padding: 15px 10px;
-    }
-    
-    #main h1 {
-        font-size: 1.4rem;
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    form {
-        padding: 15px;
-    }
-    
-    form input[type="file"],
-    form input[type="submit"] {
-        display: block;
-        width: 100%;
-        margin: 10px 0;
-    }
+.upload-btn:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
