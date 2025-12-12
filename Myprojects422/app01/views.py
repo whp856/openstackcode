@@ -5,6 +5,8 @@ import json
 from django.http import HttpRequest, JsonResponse
 from django.core.paginator import Paginator
 from django.http import StreamingHttpResponse
+import os
+from datetime import datetime
 def home(request):
     """首页视图，渲染home.html模板"""
     return render(request, 'home.html')
@@ -380,10 +382,25 @@ def view_file(request: HttpRequest, container, object, content_type):
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
+
+        # 对于视频和音频文件，直接返回流式响应
+        if content_type.startswith('video/') or content_type.startswith('audio/'):
+            # 记录查看日志
+            log_action(request.session.get('user', 'unknown'), f"查看媒体文件: {object} 从容器: {container}")
+
+            # 创建流式响应
+            streaming_response = StreamingHttpResponse(
+                response.iter_content(chunk_size=8192),
+                content_type=content_type
+            )
+            streaming_response['Content-Disposition'] = f'inline; filename="{object}"'
+            return streaming_response
+
         # 4.处理文件内容编码
         file_content = ""
         is_image = False
         is_pdf = False
+
         # 检查是否为PDF文件
         if content_type == 'application/pdf':
             is_pdf = True
@@ -394,7 +411,6 @@ def view_file(request: HttpRequest, container, object, content_type):
             is_image = True
         elif content_type.startswith('text/') or 'text' in content_type:
             file_content = response.content.decode('utf-8')
-            
         else:
             # 非文本非图片非PDF文件，提示下载
             try:
@@ -412,7 +428,8 @@ def view_file(request: HttpRequest, container, object, content_type):
             'is_image': is_image,
             'is_pdf': is_pdf
         }
-        # 记录查看日志
+
+                # 记录查看日志
         log_action(request.session.get('user', 'unknown'), f"查看文件: {object} 从容器: {container}")
         # 6.渲染查看文件页面
         return render(request, 'view_file.html', context)
@@ -463,8 +480,6 @@ def log_action(user, action):
     简单的访问日志记录功能
     参数:user: 用户名action: 操作描述
     """
-    import os # 导入os模块，用于文件操作
-    from datetime import datetime
 
     # 确保日志目录存在
     log_dir = os.path.join(os.path.dirname(__file__), 'logs')
@@ -476,13 +491,13 @@ def log_action(user, action):
     # 写入日志
     with open(log_file, 'a', encoding='utf-8') as f:
         f.write(f"[{timestamp}] {user}: {action}\n")
+
 def view_logs(request):
     """
     查看访问日志视图
     参数:request: HttpRequest对象
     返回:渲染后的日志查看页面
     """
-    import os
     from django.core.paginator import Paginator
     # 日志文件路径
     log_dir = os.path.join(os.path.dirname(__file__), 'logs')
